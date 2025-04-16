@@ -20,35 +20,38 @@ module.exports = [
             filename: 'extension.js',
             path: path.resolve(__dirname, '..', 'ipytree', 'nbextension'),
             libraryTarget: 'amd',
-            publicPath: ''
         }
     },
     {
-        entry: './lib/index.js',
+        entry: ['./amd-public-path.js', './lib/index.js',],
         output: {
             filename: 'index.js',
             path: path.resolve(__dirname, '..', 'ipytree', 'nbextension'),
             libraryTarget: 'amd',
-            publicPath: ''
+            publicPath: '' // Set in amd-public-path.js
         },
         devtool: 'source-map',
         module: {
             rules: rules
         },
-        externals: ['@jupyter-widgets/base']
+        // 'module' is the magic requirejs dependency used to set the publicPath
+        externals: ['@jupyter-widgets/base', 'module']
     },
     {
-        entry: './lib/embed.js',
+        // The target bundle is always `dist/index.js`, which is the path
+        // required by the custom widget embedder.
+        entry: ['./amd-public-path.js', './lib/index.js'],
         output: {
             filename: 'index.js',
             path: path.resolve(__dirname, 'dist'),
             libraryTarget: 'amd',
-            publicPath: 'https://unpkg.com/ipytree@' + version + '/dist/'
+            publicPath: '', // Set in amd-public-path.js
         },
         devtool: 'source-map',
         module: {
             rules: rules
         },
-        externals: ['@jupyter-widgets/base']
+        // 'module' is the magic requirejs dependency used to set the publicPath
+        externals: ['@jupyter-widgets/base', 'module']
     }
 ];
